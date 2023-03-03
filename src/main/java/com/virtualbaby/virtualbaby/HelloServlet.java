@@ -1,7 +1,9 @@
 package com.virtualbaby.virtualbaby;
 
 import java.io.*;
+import java.util.ArrayList;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
@@ -13,17 +15,11 @@ public class HelloServlet extends HttpServlet {
         message = "Hello World!";
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
 
-        // Hello
-        PrintWriter out = response.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>" + message + "</h1>");
-        out.println("</body></html>");
-        // Hola cómo están?
-   //TrabAJANDO
-   //ok
+        request.setAttribute("lista","Hola");
+        getServletContext().getRequestDispatcher("/personal_report.jsp").forward(request,response);
     }
 
     public void destroy() {
