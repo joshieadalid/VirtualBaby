@@ -22,21 +22,21 @@
 
 <div class="container">
     <h2>INICIO DE SESIÓN</h2>
-    <form>
-        <label for="perfil">PERFIL:</label>
-        <select name="perfil" id="perfil">
-            <option value="administrador">Administrador</option>
-            <option value="profesor">Profesor</option>
+    <form method="get" action="${pageContext.request.contextPath}/LoginServlet">
+        <label for="userType">PERFIL:</label>
+        <select name="userType" id="userType">
+            <option value="admin">Administrador</option>
+            <option value="professor">Profesor</option>
             <option value="tutor">Tutor</option>
         </select>
         <br><br>
-        <label for="usuario">USUARIO:</label>
-        <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario" required>
+        <label for="user">USUARIO:</label>
+        <input type="text" id="user" name="user" placeholder="Ingrese su usuario" required>
         <br><br>
-        <label for="contrasena">CONTRASEÑA:</label>
-        <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña" required>
+        <label for="password">CONTRASEÑA:</label>
+        <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
         <br><br>
-        <input type="submit" value="Entrar">
+        <input type="submit" value="submit">
     </form>
 
 </div>
