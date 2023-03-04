@@ -17,7 +17,7 @@ public class LoginServlet extends HttpServlet {
         String loginButton = request.getParameter("loginButton");
 
         if (loginButton != null){
-            if (Objects.equals(userType, "parent")){
+            if (Objects.equals(userType, "tutor")){
                 getServletContext().getRequestDispatcher("/personal_report.jsp").forward(request,response);
                 response.getWriter().println("<p>Hola papá</p>");
             }
