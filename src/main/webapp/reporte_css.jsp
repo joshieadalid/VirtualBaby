@@ -10,7 +10,7 @@
 <head>
   <title> Reporte Individual </title>
 
-  <link rel="stylesheet" href="rep.css">
+  <link rel="stylesheet" href="css/rep.css">
 </head>
 <body>
 <body bgcolor="#33fff9"></body>
