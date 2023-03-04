@@ -1,0 +1,38 @@
+package com.virtualbaby.servlets;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+
+import java.io.IOException;
+import java.util.Objects;
+
+@WebServlet(name = "LoginServlet", value = "/LoginServlet")
+public class LoginServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String userType = request.getParameter("userType");
+        String user = request.getParameter("user");
+        String password = request.getParameter("password");
+        String loginButton = request.getParameter("loginButton");
+
+        if (loginButton != null){
+            if (Objects.equals(user, "parent")){
+                getServletContext().getRequestDispatcher("/personal_report.jsp").forward(request,response);
+            }
+
+            if (Objects.equals(user, "profesor")){
+                getServletContext().getRequestDispatcher("/teachers_view.jsp").forward(request,response);
+            }
+
+            if (Objects.equals(user, "admin")){
+
+            }
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    }
+}

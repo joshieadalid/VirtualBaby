@@ -13,20 +13,22 @@
 </header>
 <main>
     <h2>Iniciar sesión</h2>
-    <form>
+    <form name="loginForm" method="get" action="loginServlet">
         <label for="perfil">Seleccione perfil:</label>
-        <select id="perfil" name="perfil">
+        <select id="perfil" name="userType">
             <option value="Administrador">Administrador</option>
             <option value="Profesor">Profesor</option>
             <option value="Tutor">Tutor</option>
         </select>
-        <label for="usuario">Usuario:</label>
-        <input type="text" id="usuario" name="usuario" placeholder="Usuario" size="30" maxlength="5">
+
+        <label for="user">Usuario:</label>
+        <input type="text" id="user" name="user" placeholder="Usuario" size="30" maxlength="5">
         <br>
-        <label for="contraseña">Contraseña:</label>
-        <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña" size="30" maxlength="20">
+        <label for="password">Contraseña:</label>
+        <input type="password" name="password" id="password" placeholder="Contraseña" size="30" maxlength="20">
         <br>
-        <input type="submit" value="Entrar">
+
+        <input type="submit" name="loginButton" value="Entrar">
     </form>
 </main>
 <footer></footer>

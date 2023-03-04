@@ -1,7 +1,6 @@
-package com.virtualbaby.virtualbaby;
+package com.virtualbaby.servlets;
 
 import java.io.*;
-import java.util.ArrayList;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
