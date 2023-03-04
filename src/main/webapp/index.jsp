@@ -13,12 +13,12 @@
 </header>
 <main>
     <h2>Iniciar sesión</h2>
-    <form name="loginForm" method="get" action="loginServlet">
+    <form name="loginForm" method="get" action="LoginServlet">
         <label for="perfil">Seleccione perfil:</label>
         <select id="perfil" name="userType">
-            <option value="Administrador">Administrador</option>
-            <option value="Profesor">Profesor</option>
-            <option value="Tutor">Tutor</option>
+            <option value="admin" name="admin">Administrador</option>
+            <option value="professor" name="">Profesor</option>
+            <option value="parent">Tutor</option>
         </select>
 
         <label for="user">Usuario:</label>

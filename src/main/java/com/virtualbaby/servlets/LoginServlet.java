@@ -17,16 +17,19 @@ public class LoginServlet extends HttpServlet {
         String loginButton = request.getParameter("loginButton");
 
         if (loginButton != null){
-            if (Objects.equals(user, "parent")){
+            if (Objects.equals(userType, "parent")){
                 getServletContext().getRequestDispatcher("/personal_report.jsp").forward(request,response);
+                response.getWriter().println("<p>Hola papá</p>");
             }
 
-            if (Objects.equals(user, "profesor")){
+            if (Objects.equals(userType, "professor")){
                 getServletContext().getRequestDispatcher("/teachers_view.jsp").forward(request,response);
+                response.getWriter().println("<p>Hola profe</p>");
             }
 
-            if (Objects.equals(user, "admin")){
-
+            if (Objects.equals(userType, "admin")){
+                getServletContext().getRequestDispatcher("/teachers_view.jsp").forward(request,response);
+                response.getWriter().println("<p>Hola administrador</p>");
             }
         }
     }
