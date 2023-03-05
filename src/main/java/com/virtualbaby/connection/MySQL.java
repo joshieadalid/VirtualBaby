@@ -1,6 +1,6 @@
 package com.virtualbaby.connection;
 
-import com.virtualbaby.entities.Usuario;
+import com.virtualbaby.entities.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class MySQL {
         System.out.println("Conexión establecida");
     }
 
-    Usuario getUser(String user, String password) throws SQLException {
+    public Usuario getUser(String user, String password) throws SQLException {
         String query = "SELECT * FROM Usuario WHERE idUsuario=? AND password=?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, user);
@@ -75,5 +75,25 @@ public class MySQL {
 
         preparedStatement.close();
         return usuario;
+    }
+
+    public ArrayList<Nino> getChildrenList() throws SQLException {
+        String query = "SELECT * FROM Niño";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        ArrayList<Nino> childrenList = new ArrayList<>();
+
+        while(resultSet.next()){
+            Nino nino = new Nino();
+            nino.setIdNino(resultSet.getString(1));
+            nino.setFechaNacimiento(resultSet.getString(2));
+            nino.setNombreNino(resultSet.getString(3));
+            nino.setAp_paterno(resultSet.getString(4));
+            nino.setAp_materno(resultSet.getString(5));
+            childrenList.add(nino);
+        }
+        preparedStatement.close();
+        return childrenList;
     }
 }

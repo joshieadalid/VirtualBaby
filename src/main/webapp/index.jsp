@@ -15,7 +15,7 @@
 
 <div class="container">
     <h2>INICIO DE SESIÓN</h2>
-    <form>
+    <form action="${pageContext.request.contextPath}/LoginServlet" method="get">
         <br><br>
         <label for="user">USUARIO:</label>
         <input type="text" id="user" name="user" placeholder="Ingrese su usuario" required>
