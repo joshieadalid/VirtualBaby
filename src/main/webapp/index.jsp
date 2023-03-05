@@ -17,13 +17,13 @@
     <h2>INICIO DE SESIÓN</h2>
     <form action="${pageContext.request.contextPath}/LoginServlet" method="get">
         <br><br>
-        <label for="user">USUARIO:</label>
-        <input type="text" id="user" name="user" placeholder="Ingrese su usuario" required>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" placeholder="Ingrese su email" required>
         <br><br>
         <label for="password">CONTRASEÑA:</label>
         <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
         <br><br>
-        <input type="submit" value="Entrar">
+        <input type="submit" name="loginButton" value="Entrar">
     </form>
 
 </div>
