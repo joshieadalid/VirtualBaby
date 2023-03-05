@@ -11,7 +11,7 @@
     <title>
 
     </title>
-    <link rel="stylesheet" href="css/prof_style.css">
+    <link rel="stylesheet" href="css/tutorStyle.css">
 </head>
 <body>
 
