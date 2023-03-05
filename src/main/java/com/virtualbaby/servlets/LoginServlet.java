@@ -1,6 +1,7 @@
 package com.virtualbaby.servlets;
 
 import com.virtualbaby.connection.MySQL;
+import com.virtualbaby.entities.Comida;
 import com.virtualbaby.entities.Nino;
 import com.virtualbaby.entities.Usuario;
 import jakarta.servlet.ServletException;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -26,13 +28,21 @@ public class LoginServlet extends HttpServlet {
         LOGGER.info(email);
         LOGGER.info(password);
         if (submitLoginButton != null) {
-            try (MySQL mysql = MySQL.getInstance()) {
+            MySQL mysql;
+            try {
+                mysql = MySQL.getInstance();
                 Usuario loggedUser = mysql.getUser(email, password);
                 LOGGER.info("Usuario logueado: " + loggedUser);
 
                 switch (loggedUser.getTipo()) {
                     case "0":
-                        // TODO: Caso tutor
+                        System.out.println(loggedUser);
+                        Nino nino = mysql.getNino(loggedUser.getIdUsuario());
+                        List<Comida> foodList = mysql.getComidaList(nino.getIdNino(), LocalDate.parse("2023-03-02"));
+                        request.setAttribute("nino", nino);
+                        request.setAttribute("tutor",loggedUser);
+                        request.setAttribute("foodList", foodList);
+                        getServletContext().getRequestDispatcher("/tutorReportView.jsp").forward(request, response);
                         break;
                     case "1":
                         String groupId = mysql.getGroupTeacher(loggedUser.getIdUsuario());
@@ -55,7 +65,7 @@ public class LoginServlet extends HttpServlet {
                 getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
             }
         }
-
     }
+
 }
 

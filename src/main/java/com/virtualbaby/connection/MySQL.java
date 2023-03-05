@@ -1,9 +1,11 @@
 package com.virtualbaby.connection;
 
+import com.virtualbaby.entities.Comida;
 import com.virtualbaby.entities.Nino;
 import com.virtualbaby.entities.Usuario;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,18 +33,7 @@ public class MySQL implements AutoCloseable {
         return instance;
     }
 
-    public static void main(String[] args) {
-        try {
-            MySQL.getInstance().loadDriver();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            MySQL.getInstance().close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
     @Override
     public void close() throws SQLException {
@@ -89,7 +80,6 @@ public class MySQL implements AutoCloseable {
         }
     }
 
-
     public List<Nino> getChildrenList(String groupId) throws SQLException {
         String query = "SELECT * FROM Niño WHERE idGrupo=?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -107,13 +97,15 @@ public class MySQL implements AutoCloseable {
                     children.add(child);
                 }
                 return children;
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 throw new SQLException("Consulta sin resultados");
             }
         } catch (SQLException e) {
             throw new SQLException("Error al obtener la lista de niños", e);
         }
     }
+
+
 
     public String getGroupTeacher(String idUser) throws SQLException {
         String query = "SELECT idGrupo FROM Grupo WHERE idProfesor = ?";
@@ -131,4 +123,57 @@ public class MySQL implements AutoCloseable {
             throw new SQLException("Error al obtener el grupo del profesor");
         }
     }
+
+    public List<Comida> getComidaList(String idNino, LocalDate date) throws SQLException {
+        String query = "SELECT Comida.cantidad, Comida.nombreComida, Comida.hora, Comida.obsComida FROM Reporte LEFT JOIN Comida ON Reporte.idReporte = Comida.idReporte WHERE Reporte.idNiño = ? AND Reporte.fecha = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, idNino);
+            statement.setDate(2, Date.valueOf(date));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                List<Comida> comidaList = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    Comida comida = new Comida();
+                    comida.setCantidad(resultSet.getString("cantidad"));
+                    comida.setNombreComida(resultSet.getString("nombreComida"));
+                    comida.setHora(resultSet.getString("hora"));
+                    comida.setObsComida(resultSet.getString("obsComida"));
+                    comidaList.add(comida);
+                }
+                return comidaList;
+            } catch (SQLException e) {
+                throw new SQLException("Consulta sin resultados");
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error al obtener la lista de comida", e);
+        }
+    }
+
+
+    public Nino getNino(String idUsuario) throws SQLException {
+        String query = "SELECT Niño.* FROM `Niño` LEFT JOIN Usuario ON Usuario.idUsuario=Niño.idTutor WHERE Usuario.idUsuario = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, idUsuario);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()){
+                    Nino nino = new Nino();
+                    nino.setIdNino(resultSet.getString("idNiño"));
+                    nino.setFechaNacimiento(resultSet.getString("fechaNacimiento"));
+                    nino.setNombreNino(resultSet.getString("nombreNiño"));
+                    nino.setAp_paterno(resultSet.getString("ap_paterno"));
+                    nino.setAp_materno(resultSet.getString("ap_materno"));
+                    nino.setIdTutor(resultSet.getString("idTutor"));
+                    nino.setGrupo(resultSet.getString("idGrupo"));
+                    return nino;
+                }else{
+                    return null;
+                }
+            }catch (SQLException e){
+                throw new SQLException("Consulta sin resultados");
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Se perdió el niño", e);
+        }
+    }
+
 }

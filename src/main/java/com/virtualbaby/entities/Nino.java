@@ -6,6 +6,8 @@ public class Nino {
     private String nombreNino;
     private String ap_paterno;
     private String ap_materno;
+    private String idTutor;
+    private String grupo;
 
     public String getIdNino() {
         return idNino;
@@ -45,5 +47,21 @@ public class Nino {
 
     public void setAp_materno(String ap_materno) {
         this.ap_materno = ap_materno;
+    }
+
+    public String getIdTutor() {
+        return idTutor;
+    }
+
+    public void setIdTutor(String idTutor) {
+        this.idTutor = idTutor;
+    }
+
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
     }
 }

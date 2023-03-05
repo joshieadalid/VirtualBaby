@@ -1,3 +1,4 @@
+<%@ page import="com.virtualbaby.entities.Nino" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -12,7 +13,7 @@
     <tr>
       <td>
         <h1>
-          Reporte Diario
+            Reporte Diario
         </h1>
       </td>
       <td>
@@ -32,15 +33,16 @@
             <tr>
               <td>
                 <label for="Nombre_Completo" >Nombre del alumno: </label>
-                <label for="Edad">Edad: </label>
+                <label for="Edad">Fecha nacimiento: </label>
                 <label for="Grupo">Grupo: </label>
                 <label for="Boleta">Boleta: </label>
               </td>
               <td class="respuesta">
-                <label for="Nombre_Completo" class="respuesta"> juanhjdhsjhdjs jhkahsdj jhasjd </label>
-                <label for="Edad" class="respuesta"> 98 </label>
-                <label for="Grupo" class="respuesta"> 2bm1</label>
-                <label for="Boleta" class="respuesta">20190987823 </label>
+                <%Nino nino = (Nino) request.getAttribute("nino");%>
+                <label for="Nombre_Completo" class="respuesta"><%=nino.getNombreNino()%> <%=nino.getAp_paterno()%> <%=nino.getAp_materno()%></label>
+                <label for="Edad" class="respuesta"><%=nino.getFechaNacimiento()%></label>
+                <label for="Grupo" class="respuesta"><%=nino.getGrupo()%>></label>
+                <label for="Boleta" class="respuesta"><%=nino.getIdNino()%></label>
               </td>
             </tr>
           </table>
