@@ -35,9 +35,8 @@ public class LoginServlet extends HttpServlet {
                         // TODO: Caso tutor
                         break;
                     case "1":
-                        List<Nino> childrenList = mysql.getChildrenList();
                         String groupId = mysql.getGroupTeacher(loggedUser.getIdUsuario());
-
+                        List<Nino> childrenList = mysql.getChildrenList(groupId);
                         request.setAttribute("childrenList", childrenList);
                         request.setAttribute("teacher", loggedUser);
                         request.setAttribute("groupId", groupId);

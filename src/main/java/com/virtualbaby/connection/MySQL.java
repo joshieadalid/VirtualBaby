@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQL implements AutoCloseable{
+public class MySQL implements AutoCloseable {
     private static MySQL instance = null;
     Connection connection;
 
@@ -23,12 +23,7 @@ public class MySQL implements AutoCloseable{
             System.out.println("Error al cargar la conexión");
         }
     }
-    @Override
-    public void close() throws SQLException {
-        if (connection != null) {
-            connection.close();
-        }
-    }
+
     public static MySQL getInstance() {
         if (instance == null) {
             instance = new MySQL();
@@ -49,7 +44,12 @@ public class MySQL implements AutoCloseable{
         }
     }
 
-
+    @Override
+    public void close() throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
+    }
 
     private void loadDriver() throws ClassNotFoundException {
         Class.forName("org.mariadb.jdbc.Driver");
@@ -81,32 +81,35 @@ public class MySQL implements AutoCloseable{
                 } else {
                     return null;
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new SQLException("Consulta sin resultados");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new SQLException("Error en la consulta");
         }
     }
 
 
-    public List<Nino> getChildrenList() throws SQLException {
-        String query = "SELECT * FROM Niño";
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+    public List<Nino> getChildrenList(String groupId) throws SQLException {
+        String query = "SELECT * FROM Niño WHERE idGrupo=?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, groupId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                List<Nino> children = new ArrayList<>();
 
-            List<Nino> children = new ArrayList<>();
-
-            while (resultSet.next()) {
-                Nino child = new Nino();
-                child.setIdNino(resultSet.getString("idNiño"));
-                child.setNombreNino(resultSet.getString("nombreNiño"));
-                child.setFechaNacimiento(resultSet.getString("fechaNacimiento"));
-                child.setAp_paterno(resultSet.getString("ap_paterno"));
-                child.setAp_materno(resultSet.getString("ap_materno"));
-                children.add(child);
+                while (resultSet.next()) {
+                    Nino child = new Nino();
+                    child.setIdNino(resultSet.getString("idNiño"));
+                    child.setNombreNino(resultSet.getString("nombreNiño"));
+                    child.setFechaNacimiento(resultSet.getString("fechaNacimiento"));
+                    child.setAp_paterno(resultSet.getString("ap_paterno"));
+                    child.setAp_materno(resultSet.getString("ap_materno"));
+                    children.add(child);
+                }
+                return children;
+            }catch (SQLException e){
+                throw new SQLException("Consulta sin resultados");
             }
-            return children;
         } catch (SQLException e) {
             throw new SQLException("Error al obtener la lista de niños", e);
         }
