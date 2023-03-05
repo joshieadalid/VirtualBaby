@@ -1,12 +1,13 @@
 package com.virtualbaby.connection;
 
-import com.virtualbaby.entities.*;
+import com.virtualbaby.entities.Nino;
+import com.virtualbaby.entities.Usuario;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQL {
+public class MySQL implements AutoCloseable{
     private static MySQL instance = null;
     Connection connection;
 
@@ -22,7 +23,12 @@ public class MySQL {
             System.out.println("Error al cargar la conexión");
         }
     }
-
+    @Override
+    public void close() throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
+    }
     public static MySQL getInstance() {
         if (instance == null) {
             instance = new MySQL();
@@ -37,15 +43,13 @@ public class MySQL {
             throw new RuntimeException(e);
         }
         try {
-            MySQL.getInstance().closeConnection();
+            MySQL.getInstance().close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    void closeConnection() throws SQLException {
-        connection.close();
-    }
+
 
     private void loadDriver() throws ClassNotFoundException {
         Class.forName("org.mariadb.jdbc.Driver");
@@ -59,24 +63,32 @@ public class MySQL {
 
     public Usuario getUser(String email, String password) throws SQLException {
         String query = "SELECT * FROM Usuario WHERE email=? AND password=?";
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setString(1, email);
-        preparedStatement.setString(2, password);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        resultSet.next();
-        Usuario usuario = new Usuario();
-        usuario.setIdUsuario(resultSet.getString(1));
-        usuario.setNombreUsuario(resultSet.getString(2));
-        usuario.setAp_paterno(resultSet.getString(3));
-        usuario.setAp_materno(resultSet.getString(4));
-        usuario.setEmail(resultSet.getString(5));
-        usuario.setTelefono(resultSet.getString(6));
-        usuario.setPassword(resultSet.getString(7));
-        usuario.setTipo(resultSet.getString(8));
-
-        preparedStatement.close();
-        return usuario;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    Usuario usuario = new Usuario();
+                    usuario.setIdUsuario(resultSet.getString(1));
+                    usuario.setNombreUsuario(resultSet.getString(2));
+                    usuario.setAp_paterno(resultSet.getString(3));
+                    usuario.setAp_materno(resultSet.getString(4));
+                    usuario.setEmail(resultSet.getString(5));
+                    usuario.setTelefono(resultSet.getString(6));
+                    usuario.setPassword(resultSet.getString(7));
+                    usuario.setTipo(resultSet.getString(8));
+                    return usuario;
+                } else {
+                    return null;
+                }
+            }catch (Exception e){
+                throw new SQLException("Consulta sin resultados");
+            }
+        }catch (Exception e){
+            throw new SQLException("Error en la consulta");
+        }
     }
+
 
     public List<Nino> getChildrenList() throws SQLException {
         String query = "SELECT * FROM Niño";
@@ -100,4 +112,20 @@ public class MySQL {
         }
     }
 
+    public String getGroupTeacher(String idUser) throws SQLException {
+        String query = "SELECT idGrupo FROM Grupo WHERE idProfesor = ?";
+        System.out.println(idUser);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, idUser);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("idGrupo");
+            } else {
+                return null;
+            }
+
+        } catch (SQLException e) {
+            throw new SQLException("Error al obtener el grupo del profesor");
+        }
+    }
 }

@@ -25,12 +25,13 @@
         <tr>
             <td>
                 <%Usuario teacher = (Usuario) request.getAttribute("teacher");%>
+                <%String groupId = (String) request.getAttribute("groupId");%>
                 <label for="Nombre_Completo">NOMBRE:</label>
                 <label for="Grupo">GRUPO: </label>
             </td>
             <td class="respuesta">
                 <label for="Nombre_Completo" class="respuesta"> <%=teacher.getNombreUsuario()%> <%=teacher.getAp_paterno()%> <%=teacher.getAp_materno()%> </label>
-                <label for="Grupo" class="respuesta"> 2bm1</label>
+                <label for="Grupo" class="respuesta"> <%=groupId%></label>
             </td>
         </tr>
     </table>

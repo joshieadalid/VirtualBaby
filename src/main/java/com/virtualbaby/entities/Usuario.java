@@ -76,15 +76,15 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario{" +
-                "idUsuario='" + idUsuario + '\'' +
-                ", nombreUsuario='" + nombreUsuario + '\'' +
-                ", ap_paterno='" + ap_paterno + '\'' +
-                ", ap_materno='" + ap_materno + '\'' +
-                ", email='" + email + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", password='" + password + '\'' +
-                ", tipo='" + tipo + '\'' +
-                '}';
+        return String.format("""
+                Usuario{idUsuario='%s',
+                nombreUsuario='%s',
+                ap_paterno='%s',
+                ap_materno='%s',
+                email='%s',
+                telefono='%s',
+                password='%s',
+                tipo='%s'
+                }""", idUsuario, nombreUsuario, ap_paterno, ap_materno, email, telefono, password, tipo);
     }
 }
