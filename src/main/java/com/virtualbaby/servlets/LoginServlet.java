@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
                         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
                         break;
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 LOGGER.severe("Error al obtener el usuario de la base de datos" + e);
                 request.setAttribute("error", "Error al obtener el usuario");
                 getServletContext().getRequestDispatcher(VIEW_ERROR).forward(request, response);

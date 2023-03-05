@@ -4,6 +4,7 @@ import com.virtualbaby.entities.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MySQL {
     private static MySQL instance = null;
@@ -77,23 +78,26 @@ public class MySQL {
         return usuario;
     }
 
-    public ArrayList<Nino> getChildrenList() throws SQLException {
+    public List<Nino> getChildrenList() throws SQLException {
         String query = "SELECT * FROM Niño";
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        ResultSet resultSet = preparedStatement.executeQuery();
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
 
-        ArrayList<Nino> childrenList = new ArrayList<>();
+            List<Nino> children = new ArrayList<>();
 
-        while(resultSet.next()){
-            Nino nino = new Nino();
-            nino.setIdNino(resultSet.getString(1));
-            nino.setFechaNacimiento(resultSet.getString(2));
-            nino.setNombreNino(resultSet.getString(3));
-            nino.setAp_paterno(resultSet.getString(4));
-            nino.setAp_materno(resultSet.getString(5));
-            childrenList.add(nino);
+            while (resultSet.next()) {
+                Nino child = new Nino();
+                child.setIdNino(resultSet.getString("idNiño"));
+                child.setNombreNino(resultSet.getString("nombreNiño"));
+                child.setFechaNacimiento(resultSet.getString("fechaNacimiento"));
+                child.setAp_paterno(resultSet.getString("ap_paterno"));
+                child.setAp_materno(resultSet.getString("ap_materno"));
+                children.add(child);
+            }
+            return children;
+        } catch (SQLException e) {
+            throw new SQLException("Error al obtener la lista de niños", e);
         }
-        preparedStatement.close();
-        return childrenList;
     }
+
 }
