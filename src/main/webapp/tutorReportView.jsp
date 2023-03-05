@@ -1,3 +1,4 @@
+<jsp:useBean id="nino" scope="request" type="com.virtualbaby.entities.Nino"/>
 <%@ page import="com.virtualbaby.entities.Nino" %>
 <%@ page import="com.virtualbaby.entities.Comida" %>
 <%@ page import="java.util.List" %>
@@ -9,7 +10,7 @@
     <link rel="stylesheet" href="css/tutr.css">
 </head>
 <body>
-<body bgcolor="#33fff9"></body>
+
 <div class="bar">
     <table>
         <tr>
@@ -19,7 +20,8 @@
                 </h1>
             </td>
             <td>
-                <form action="">
+                <form action="${pageContext.request.contextPath}/TutorReportServlet" method="get">
+                    <input type="hidden" name="nino" value="${nino}">
                     <label for="Fecha">
                     </label><input type="date" placeholder="..." name="date" id="Fecha">
                     <input type="submit" name="changeDateButton">
@@ -44,7 +46,6 @@
                                 <label for="Boleta">Boleta: </label>
                             </td>
                             <td class="respuesta">
-                                <%Nino nino = (Nino) request.getAttribute("nino");%>
                                 <label for="Nombre_Completo" class="respuesta"><%=nino.getNombreNino()%>
                                 </label>
                                 <label for="Edad" class="respuesta"><%=nino.getFechaNacimiento()%>
