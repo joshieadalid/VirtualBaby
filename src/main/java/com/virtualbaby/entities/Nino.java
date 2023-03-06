@@ -7,7 +7,7 @@ public class Nino {
     private String ap_paterno;
     private String ap_materno;
     private String idTutor;
-    private String grupo;
+    private String idGrupo;
 
     public String getIdNino() {
         return idNino;
@@ -57,12 +57,12 @@ public class Nino {
         this.idTutor = idTutor;
     }
 
-    public String getGrupo() {
-        return grupo;
+    public String getIdGrupo() {
+        return idGrupo;
     }
 
-    public void setGrupo(String grupo) {
-        this.grupo = grupo;
+    public void setIdGrupo(String idGrupo) {
+        this.idGrupo = idGrupo;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Nino {
                 ", ap_paterno='" + ap_paterno + '\'' +
                 ", ap_materno='" + ap_materno + '\'' +
                 ", idTutor='" + idTutor + '\'' +
-                ", grupo='" + grupo + '\'' +
+                ", grupo='" + idGrupo + '\'' +
                 '}';
     }
 }

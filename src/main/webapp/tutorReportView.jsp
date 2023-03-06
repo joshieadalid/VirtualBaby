@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/tutr.css">
 </head>
 <body>
-
+<%Nino nino = (Nino) request.getAttribute("nino");%>
 <div class="bar">
     <table>
         <tr>
@@ -18,10 +18,9 @@
             </td>
             <td>
                 <form action="${pageContext.request.contextPath}/TutorReportServlet" method="get">
-
-                    <input type="hidden" name="nino" value="${nino}">
+                    <input type="hidden" name="ninoId" value="<%=nino.getIdNino()%>">
                     <label for="Fecha">
-                    </label><input type="date" placeholder="..." name="date" id="Fecha">
+                    </label><input type="date" placeholder="..."  id="Fecha"name="date">
                     <input type="submit" name="changeDateButton">
                 </form>
             </td>
@@ -48,7 +47,7 @@
                                 </label>
                                 <label for="Edad" class="respuesta"><%=nino.getFechaNacimiento()%>
                                 </label>
-                                <label for="Grupo" class="respuesta"><%=nino.getGrupo()%>
+                                <label for="Grupo" class="respuesta"><%=nino.getIdGrupo()%>
                                 </label>
                                 <label for="Boleta" class="respuesta"><%=nino.getIdNino()%>
                                 </label>

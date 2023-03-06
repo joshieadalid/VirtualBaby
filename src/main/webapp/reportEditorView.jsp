@@ -41,7 +41,7 @@
                 <%Nino nino = (Nino) request.getAttribute("nino");%>
                 <label for="Nombre_Completo" class="respuesta"><%=nino.getNombreNino()%> <%=nino.getAp_paterno()%> <%=nino.getAp_materno()%></label>
                 <label for="Edad" class="respuesta"><%=nino.getFechaNacimiento()%></label>
-                <label for="Grupo" class="respuesta"><%=nino.getGrupo()%>></label>
+                <label for="Grupo" class="respuesta"><%=nino.getIdGrupo()%>></label>
                 <label for="Boleta" class="respuesta"><%=nino.getIdNino()%></label>
               </td>
             </tr>

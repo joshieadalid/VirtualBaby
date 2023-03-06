@@ -5,7 +5,6 @@ import com.virtualbaby.entities.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MySQL implements AutoCloseable {
@@ -78,6 +77,58 @@ public class MySQL implements AutoCloseable {
             throw new SQLException("Error en la consulta");
         }
     }
+    public Nino getNinoWithNinoId(String idNino) throws SQLException {
+        String query = "SELECT * from Niño WHERE idNiño = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, idNino);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    Nino nino = new Nino();
+                    nino.setIdNino(resultSet.getString("idNiño"));
+                    nino.setFechaNacimiento(resultSet.getString("fechaNacimiento"));
+                    nino.setNombreNino(resultSet.getString("nombreNiño"));
+                    nino.setAp_paterno(resultSet.getString("ap_paterno"));
+                    nino.setAp_materno(resultSet.getString("ap_materno"));
+                    nino.setIdTutor(resultSet.getString("idTutor"));
+                    nino.setIdGrupo(resultSet.getString("idGrupo"));
+
+                    return nino;
+                } else {
+                    return null;
+                }
+            } catch (Exception e) {
+                throw new SQLException("Consulta sin resultados");
+            }
+        } catch (Exception e) {
+            throw new SQLException("Error en la consulta");
+        }
+    }
+public Usuario getUserById(String idUsuario) throws SQLException {
+        String query = "SELECT * from Usuario WHERE idUsuario = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, idUsuario);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    Usuario usuario = new Usuario();
+                    usuario.setIdUsuario(resultSet.getString("idUsuario"));
+                    usuario.setNombreUsuario(resultSet.getString("nombreUsuario"));
+                    usuario.setAp_paterno(resultSet.getString("ap_paterno"));
+                    usuario.setAp_materno(resultSet.getString("ap_materno"));
+                    usuario.setEmail(resultSet.getString("email"));
+                    usuario.setTelefono(resultSet.getString("telefono"));
+                    usuario.setPassword(resultSet.getString("password"));
+                    usuario.setTipo(resultSet.getString("tipo"));
+                    return usuario;
+                } else {
+                    return null;
+                }
+            } catch (Exception e) {
+                throw new SQLException("Consulta sin resultados");
+            }
+        } catch (Exception e) {
+            throw new SQLException("Error en la consulta");
+        }
+    }
 
     public List<Nino> getChildrenList(String groupId) throws SQLException {
         String query = "SELECT * FROM Niño WHERE idGrupo=?";
@@ -130,14 +181,14 @@ public class MySQL implements AutoCloseable {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 Usuario profesor = new Usuario();
-                profesor.setTipo("idUsuario");
-                profesor.setNombreUsuario("nombreUsuario");
-                profesor.setAp_paterno("ap_paterno");
-                profesor.setAp_materno("ap_materno");
-                profesor.setEmail("email");
-                profesor.setTelefono("telefono");
-                profesor.setPassword("password");
-                profesor.setTipo("tipo");
+                profesor.setTipo(resultSet.getString("idUsuario"));
+                profesor.setNombreUsuario(resultSet.getString("nombreUsuario"));
+                profesor.setAp_paterno(resultSet.getString("ap_paterno"));
+                profesor.setAp_materno(resultSet.getString("ap_materno"));
+                profesor.setEmail(resultSet.getString("email"));
+                profesor.setTelefono(resultSet.getString("telefono"));
+                profesor.setPassword(resultSet.getString("password"));
+                profesor.setTipo(resultSet.getString("tipo"));
                 return profesor;
             } else {
                 return null;
@@ -240,7 +291,7 @@ public class MySQL implements AutoCloseable {
                     nino.setAp_paterno(resultSet.getString("ap_paterno"));
                     nino.setAp_materno(resultSet.getString("ap_materno"));
                     nino.setIdTutor(resultSet.getString("idTutor"));
-                    nino.setGrupo(resultSet.getString("idGrupo"));
+                    nino.setIdGrupo(resultSet.getString("idGrupo"));
                     return nino;
                 }else{
                     return null;
@@ -255,10 +306,16 @@ public class MySQL implements AutoCloseable {
 
     public static void main(String[] args) {
         try {
-            getInstance().getUser("maria.rodriguez@mai")
+            getInstance().getUser("maria.rodriguez@mai","");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
+        try {
+            Nino n0001 = getInstance().getNinoWithNinoId("N0001");
+            System.out.println(n0001);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

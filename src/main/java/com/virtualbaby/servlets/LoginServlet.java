@@ -32,7 +32,7 @@ public class LoginServlet extends HttpServlet {
             try {
                 mysql = MySQL.getInstance();
                 loggedUser = mysql.getUser(email, password);
-                LOGGER.info("Usuario logueado: " + loggedUser);
+                LOGGER.info("Usuario: " + loggedUser);
             } catch (Exception e) {
                 LOGGER.severe("Error al obtener el usuario de la base de datos" + e);
                 request.setAttribute("error", "Error al obtener el usuario");
@@ -42,27 +42,27 @@ public class LoginServlet extends HttpServlet {
                 switch (loggedUser.getTipo()) {
                     case "0":
                         LOGGER.warning("Usuario de tipo 0");
-                        Nino nino = null;
+                        Nino nino;
                         try {
                             nino = mysql.getNino(loggedUser.getIdUsuario());
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
 
-                        List<Comida> foodList = null;
+                        List<Comida> foodList;
                         try {
                             foodList = mysql.getComidaList(nino.getIdNino(), LocalDate.parse("2023-03-02"));
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
 
-                        List<Sueno> sleepList = null;
+                        List<Sueno> sleepList;
                         try {
                             sleepList = mysql.getSuenoList(nino.getIdNino(), LocalDate.parse("2023-03-02"));
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
-                        List<Bano> evacuationList = null;
+                        List<Bano> evacuationList;
                         try {
                             evacuationList = mysql.getBanoList(nino.getIdNino(), LocalDate.parse("2023-03-02"));
                         } catch (SQLException e) {
@@ -70,7 +70,7 @@ public class LoginServlet extends HttpServlet {
                         }
                         Usuario teacher;
                         try {
-                            teacher = mysql.getTeacherDataByGroup(nino.getGrupo());
+                            teacher = mysql.getTeacherDataByGroup(nino.getIdGrupo());
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
@@ -84,13 +84,13 @@ public class LoginServlet extends HttpServlet {
                         break;
                     case "1":
                         LOGGER.warning("Usuario de tipo 1");
-                        String groupId = null;
+                        String groupId;
                         try {
                             groupId = mysql.getGroupTeacher(loggedUser.getIdUsuario());
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
-                        List<Nino> childrenList = null;
+                        List<Nino> childrenList;
                         try {
                             childrenList = mysql.getChildrenList(groupId);
                         } catch (SQLException e) {
