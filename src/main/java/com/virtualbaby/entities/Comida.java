@@ -55,4 +55,16 @@ public class Comida {
     public void setNombreComida(String nombreComida) {
         this.nombreComida = nombreComida;
     }
+
+    @Override
+    public String toString() {
+        return "Comida{" +
+                "idComida='" + idComida + '\'' +
+                ", cantidad='" + cantidad + '\'' +
+                ", hora='" + hora + '\'' +
+                ", idReporte='" + idReporte + '\'' +
+                ", obsComida='" + obsComida + '\'' +
+                ", nombreComida='" + nombreComida + '\'' +
+                '}';
+    }
 }

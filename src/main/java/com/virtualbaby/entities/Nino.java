@@ -64,4 +64,17 @@ public class Nino {
     public void setGrupo(String grupo) {
         this.grupo = grupo;
     }
+
+    @Override
+    public String toString() {
+        return "Nino{" +
+                "idNino='" + idNino + '\'' +
+                ", fechaNacimiento='" + fechaNacimiento + '\'' +
+                ", nombreNino='" + nombreNino + '\'' +
+                ", ap_paterno='" + ap_paterno + '\'' +
+                ", ap_materno='" + ap_materno + '\'' +
+                ", idTutor='" + idTutor + '\'' +
+                ", grupo='" + grupo + '\'' +
+                '}';
+    }
 }

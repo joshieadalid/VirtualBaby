@@ -1,12 +1,11 @@
 package com.virtualbaby.connection;
 
-import com.virtualbaby.entities.Comida;
-import com.virtualbaby.entities.Nino;
-import com.virtualbaby.entities.Usuario;
+import com.virtualbaby.entities.*;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MySQL implements AutoCloseable {
@@ -48,7 +47,7 @@ public class MySQL implements AutoCloseable {
     }
 
     private void loadConnection() throws SQLException {
-        connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/Virtual_Baby", "root", "");
+        connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/Virtual_Baby", "root", "root");
         System.out.println("Conexión establecida");
     }
 
@@ -109,7 +108,7 @@ public class MySQL implements AutoCloseable {
 
     public String getGroupTeacher(String idUser) throws SQLException {
         String query = "SELECT idGrupo FROM Grupo WHERE idProfesor = ?";
-        System.out.println(idUser);
+
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, idUser);
             ResultSet resultSet = statement.executeQuery();
@@ -124,8 +123,35 @@ public class MySQL implements AutoCloseable {
         }
     }
 
+    public Usuario getTeacherDataByGroup(String idGrupo) throws SQLException {
+        String query = "SELECT Usuario.* FROM Grupo LEFT JOIN Usuario ON Grupo.idProfesor = Usuario.idUsuario WHERE Grupo.idGrupo = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, idGrupo);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                Usuario profesor = new Usuario();
+                profesor.setTipo("idUsuario");
+                profesor.setNombreUsuario("nombreUsuario");
+                profesor.setAp_paterno("ap_paterno");
+                profesor.setAp_materno("ap_materno");
+                profesor.setEmail("email");
+                profesor.setTelefono("telefono");
+                profesor.setPassword("password");
+                profesor.setTipo("tipo");
+                return profesor;
+            } else {
+                return null;
+            }
+
+        } catch (SQLException e) {
+            throw new SQLException("Error al obtener el profesor por el grupo");
+        }
+    }
+
+
+
     public List<Comida> getComidaList(String idNino, LocalDate date) throws SQLException {
-        String query = "SELECT Comida.cantidad, Comida.nombreComida, Comida.hora, Comida.obsComida FROM Reporte LEFT JOIN Comida ON Reporte.idReporte = Comida.idReporte WHERE Reporte.idNiño = ? AND Reporte.fecha = ?";
+        String query = "SELECT Comida.* FROM Reporte LEFT JOIN Comida ON Reporte.idReporte = Comida.idReporte WHERE Reporte.idNiño = ? AND Reporte.fecha = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, idNino);
             statement.setDate(2, Date.valueOf(date));
@@ -149,6 +175,57 @@ public class MySQL implements AutoCloseable {
         }
     }
 
+    public List<Bano> getBanoList(String idNino, LocalDate date) throws SQLException {
+        String query = "SELECT Baño.* FROM Reporte LEFT JOIN Baño  ON Reporte.idReporte = Baño.idReporte WHERE Reporte.idNiño = ? AND Reporte.fecha = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, idNino);
+            statement.setDate(2, Date.valueOf(date));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                List<Bano> banoList = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    Bano bano = new Bano();
+                    bano.setIdBano(resultSet.getString("idBaño"));
+                    bano.setHora(resultSet.getString("hora"));
+                    bano.setTipo(resultSet.getString("tipo"));
+                    bano.setIdReporte(resultSet.getString("idReporte"));
+                    bano.setObsBano(resultSet.getString("obsBaño"));
+                    banoList.add(bano);
+                }
+                return banoList;
+            } catch (SQLException e) {
+                throw new SQLException("Consulta sin resultados");
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error al obtener la lista de baño", e);
+        }
+    }
+
+    public List<Sueno> getSuenoList(String idNino, LocalDate date) throws SQLException {
+        String query = "SELECT Sueño.* FROM Reporte LEFT JOIN Sueño  ON Reporte.idReporte = Sueño.idReporte WHERE Reporte.idNiño = ? AND Reporte.fecha = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, idNino);
+            statement.setDate(2, Date.valueOf(date));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                List<Sueno> suenoList = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    Sueno sueno = new Sueno();
+                    sueno.setIdSueno(resultSet.getString("idSueño"));
+                    sueno.setHoraInicio(resultSet.getString("horaInicio"));
+                    sueno.setHoraFin(resultSet.getString("horaFin"));
+                    sueno.setObsSueno(resultSet.getString("obsSueño"));
+                    sueno.setIdReporte(resultSet.getString("idReporte"));
+                    suenoList.add(sueno);
+                }
+                return suenoList;
+            } catch (SQLException e) {
+                throw new SQLException("Consulta sin resultados");
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error al obtener la lista de sueño", e);
+        }
+    }
 
     public Nino getNino(String idUsuario) throws SQLException {
         String query = "SELECT Niño.* FROM `Niño` LEFT JOIN Usuario ON Usuario.idUsuario=Niño.idTutor WHERE Usuario.idUsuario = ?";
@@ -176,4 +253,12 @@ public class MySQL implements AutoCloseable {
         }
     }
 
+    public static void main(String[] args) {
+        try {
+            getInstance().getUser("maria.rodriguez@mai")
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }

@@ -1,8 +1,5 @@
-<jsp:useBean id="nino" scope="request" type="com.virtualbaby.entities.Nino"/>
-<%@ page import="com.virtualbaby.entities.Nino" %>
-<%@ page import="com.virtualbaby.entities.Comida" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.virtualbaby.entities.*" %>
 <html>
 <head>
     <title> Reporte del dia</title>
@@ -21,6 +18,7 @@
             </td>
             <td>
                 <form action="${pageContext.request.contextPath}/TutorReportServlet" method="get">
+
                     <input type="hidden" name="nino" value="${nino}">
                     <label for="Fecha">
                     </label><input type="date" placeholder="..." name="date" id="Fecha">
@@ -66,16 +64,16 @@
                     <table>
                         <tr>
                             <td>
-                                <label for="Nombre_Tutor">Nombre tutor: </label>
+                                <label for="Nombre_Tutor">Nombre docente: </label>
                                 <label for="Telefono_Tutor">Telefono: </label>
                                 <label for="email_Tutor">Correo Electronico: </label>
                                 <label for="email_Tutor"> .</label>
                             </td>
                             <td class="respuesta">
-                                <label for="Nombre_Tutor" class="respuesta">juana dsaasda lotkyot </label>
-                                <label for="Telefono_Tutor" class="respuesta">555720471 </label>
-                                <label for="email_Tutor" class="respuesta">uitmxppw@hpkg.com</label>
-                                <label for="email_Tutor" class="respuesta"> .</label>
+                                <%Usuario teacher = (Usuario) request.getAttribute("teacher");%>
+                                <label for="Nombre_Tutor" class="respuesta"><%=teacher.getNombreUsuario()%></label>
+                                <label for="Telefono_Tutor" class="respuesta"><%=teacher.getTelefono()%></label>
+                                <label for="email_Tutor" class="respuesta"><%=teacher.getEmail()%></label>
                             </td>
                         </tr>
                     </table>
@@ -99,12 +97,16 @@
             <!--Fila columna-->
 
             <%List<Comida> foodList = (List<Comida>) request.getAttribute("foodList");%>
-            <%for(Comida i : foodList){%>
+            <%for (Comida i : foodList) {%>
             <tr class="suave">
-                <td><h3 id="Hora Comida"><%=i.getHora()%></h3></td>
-                <td><h3 id="alimentos"><%=i.getNombreComida()%></h3></td>
-                <td><h3 id="comias"><%=i.getCantidad()%></h3></td>
-                <td><h3 id="Observaciones_Comida"><%=i.getObsComida()%></h3</td>
+                <td><h3 id="Hora Comida"><%=i.getHora()%>
+                </h3></td>
+                <td><h3 id="alimentos"><%=i.getNombreComida()%>
+                </h3></td>
+                <td><h3 id="comias"><%=i.getCantidad()%>
+                </h3></td>
+                <td><h3 id="Observaciones_Comida"><%=i.getObsComida()%>
+                </h3</td>
             </tr>
             <%} %>
             </tbody>
@@ -125,32 +127,17 @@
                 <th>Hora de despertar</th>
                 <th>Observaciones</th>
             </tr>
-            <!--Fila columna-->
+            <%List<Sueno> sleepList = (List<Sueno>) request.getAttribute("sleepList");%>
+            <%for (Sueno i : sleepList) {%>
             <tr class="suave">
-                <td><h3 id="Hora_Siesta"> 03:40 </h3></td>
-                <td><h3 id="Hora_fin_siesta"> 16:00 </h3></td>
-                <td><h3 id="Observaciones_Sueño"> No hay observaciones </h3></td>
+                <td><h3 id="Hora inicio"><%=i.getHoraInicio()%>
+                </h3></td>
+                <td><h3 id="Hora de despertar"><%=i.getHoraFin()%>
+                </h3></td>
+                <td><h3 id="Observaciones"><%=i.getObsSueno()%>
+                </h3></td>
             </tr>
-            <tr class="suave">
-                <td><h3 id="Hora_Siesta"> 03:40 </h3></td>
-                <td><h3 id="Hora_fin_siesta"> 16:00 </h3></td>
-                <td><h3 id="Observaciones_Sueño"> No hay observaciones </h3></td>
-            </tr>
-            <tr class="suave">
-                <td><h3 id="Hora_Siesta"> 03:40 </h3></td>
-                <td><h3 id="Hora_fin_siesta"> 16:00 </h3></td>
-                <td><h3 id="Observaciones_Sueño"> No hay observaciones </h3></td>
-            </tr>
-            <tr class="suave">
-                <td><h3 id="Hora_Siesta"> 03:40 </h3></td>
-                <td><h3 id="Hora_fin_siesta"> 16:00 </h3></td>
-                <td><h3 id="Observaciones_Sueño"> No hay observaciones </h3></td>
-            </tr>
-            <tr class="suave">
-                <td><h3 id="Hora_Siesta"> 03:40 </h3></td>
-                <td><h3 id="Hora_fin_siesta"> 16:00 </h3></td>
-                <td><h3 id="Observaciones_Sueño"> No hay observaciones </h3></td>
-            </tr>
+            <%} %>
 
             </tbody>
         </table>
@@ -170,34 +157,17 @@
                 <th>Tipo</th>
                 <th>Observaciones</th>
             </tr>
-            <!--Fila columna-->
+            <%List<Bano> evacuationList = (List<Bano>) request.getAttribute("evacuationList");%>
+            <%for (Bano i : evacuationList) {%>
             <tr class="suave">
-                <td><h3 id="Hora Baño">12:00</h3></td>
-                <td><h3 id="Baño">Pipí</h3></td>
-                <td><h3 id="Observaciones_Comida">Sin observaciones</h3></td>
+                <td><h3 id="Hora"><%=i.getHora()%>
+                </h3></td>
+                <td><h3 id="Tipo"><%=i.getTipo()%>
+                </h3></td>
+                <td><h3 id="ObservacionesBaño"><%=i.getObsBano()%>
+                </h3></td>
             </tr>
-            <tr class="suave">
-                <td><h3 id="Hora Baño">12:00</h3></td>
-                <td><h3 id="Baño">Pipí</h3></td>
-                <td><h3 id="Observaciones_Comida">Sin observaciones</h3></td>
-            </tr>
-            <tr class="suave">
-                <td><h3 id="Hora Baño">12:00</h3></td>
-                <td><h3 id="Baño">Pipí</h3></td>
-                <td><h3 id="Observaciones_Comida">Sin observaciones</h3></td>
-            </tr>
-            <tr class="suave">
-                <td><h3 id="Hora Baño">12:00</h3></td>
-                <td><h3 id="Baño">Pipí</h3></td>
-                <td><h3 id="Observaciones_Comida">Sin observaciones</h3></td>
-            </tr>
-            <tr class="suave">
-                <td><h3 id="Hora Baño">12:00</h3></td>
-                <td><h3 id="Baño">Pipí</h3></td>
-                <td><h3 id="Observaciones_Comida">Sin observaciones</h3></td>
-            </tr>
-
-
+            <%} %>
             </tbody>
         </table>
         <br/>

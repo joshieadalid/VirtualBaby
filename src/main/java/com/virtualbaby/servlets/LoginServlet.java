@@ -1,9 +1,7 @@
 package com.virtualbaby.servlets;
 
 import com.virtualbaby.connection.MySQL;
-import com.virtualbaby.entities.Comida;
-import com.virtualbaby.entities.Nino;
-import com.virtualbaby.entities.Usuario;
+import com.virtualbaby.entities.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
@@ -28,25 +27,75 @@ public class LoginServlet extends HttpServlet {
         LOGGER.info(email);
         LOGGER.info(password);
         if (submitLoginButton != null) {
-            MySQL mysql;
+            MySQL mysql = null;
+            Usuario loggedUser = null;
             try {
                 mysql = MySQL.getInstance();
-                Usuario loggedUser = mysql.getUser(email, password);
+                loggedUser = mysql.getUser(email, password);
                 LOGGER.info("Usuario logueado: " + loggedUser);
-
+            } catch (Exception e) {
+                LOGGER.severe("Error al obtener el usuario de la base de datos" + e);
+                request.setAttribute("error", "Error al obtener el usuario");
+                getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+            }
+            if (loggedUser != null) {
                 switch (loggedUser.getTipo()) {
                     case "0":
-                        System.out.println(loggedUser);
-                        Nino nino = mysql.getNino(loggedUser.getIdUsuario());
-                        List<Comida> foodList = mysql.getComidaList(nino.getIdNino(), LocalDate.parse("2023-03-02"));
+                        LOGGER.warning("Usuario de tipo 0");
+                        Nino nino = null;
+                        try {
+                            nino = mysql.getNino(loggedUser.getIdUsuario());
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        List<Comida> foodList = null;
+                        try {
+                            foodList = mysql.getComidaList(nino.getIdNino(), LocalDate.parse("2023-03-02"));
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        List<Sueno> sleepList = null;
+                        try {
+                            sleepList = mysql.getSuenoList(nino.getIdNino(), LocalDate.parse("2023-03-02"));
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                        List<Bano> evacuationList = null;
+                        try {
+                            evacuationList = mysql.getBanoList(nino.getIdNino(), LocalDate.parse("2023-03-02"));
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                        Usuario teacher;
+                        try {
+                            teacher = mysql.getTeacherDataByGroup(nino.getGrupo());
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                         request.setAttribute("nino", nino);
-                        request.setAttribute("tutor",loggedUser);
+                        request.setAttribute("tutor", loggedUser);
                         request.setAttribute("foodList", foodList);
+                        request.setAttribute("sleepList", sleepList);
+                        request.setAttribute("evacuationList", evacuationList);
+                        request.setAttribute("teacher", teacher);
                         getServletContext().getRequestDispatcher("/tutorReportView.jsp").forward(request, response);
                         break;
                     case "1":
-                        String groupId = mysql.getGroupTeacher(loggedUser.getIdUsuario());
-                        List<Nino> childrenList = mysql.getChildrenList(groupId);
+                        LOGGER.warning("Usuario de tipo 1");
+                        String groupId = null;
+                        try {
+                            groupId = mysql.getGroupTeacher(loggedUser.getIdUsuario());
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                        List<Nino> childrenList = null;
+                        try {
+                            childrenList = mysql.getChildrenList(groupId);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                         request.setAttribute("childrenList", childrenList);
                         request.setAttribute("teacher", loggedUser);
                         request.setAttribute("groupId", groupId);
@@ -59,11 +108,8 @@ public class LoginServlet extends HttpServlet {
                         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
                         break;
                 }
-            } catch (Exception e) {
-                LOGGER.severe("Error al obtener el usuario de la base de datos" + e);
-                request.setAttribute("error", "Error al obtener el usuario");
-                getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
             }
+
         }
     }
 

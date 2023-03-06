@@ -46,4 +46,15 @@ public class Sueno {
     public void setIdReporte(String idReporte) {
         this.idReporte = idReporte;
     }
+
+    @Override
+    public String toString() {
+        return "Sueno{" +
+                "idSueno='" + idSueno + '\'' +
+                ", horaInicio='" + horaInicio + '\'' +
+                ", horaFin='" + horaFin + '\'' +
+                ", obsSueno='" + obsSueno + '\'' +
+                ", idReporte='" + idReporte + '\'' +
+                '}';
+    }
 }
